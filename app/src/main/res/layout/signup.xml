@@ -31,6 +31,7 @@
             app:layout_constraintTop_toBottomOf="@id/ivLogo">
 
             <TextView
+                android:id="@+id/tvTabLogin"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -206,13 +207,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Don’t have an account? "
+                android:text="Already have an account? "
                 android:textColor="@color/gray_text" />
 
             <TextView
+                android:id="@+id/tvLogin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sign up"
+                android:text="Log in"
                 android:textColor="@color/link_blue"
                 android:textStyle="bold" />
         </LinearLayout>

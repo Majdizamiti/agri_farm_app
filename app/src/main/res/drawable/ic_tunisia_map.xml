@@ -1,0 +1,31 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="400dp"
+    android:height="600dp"
+    android:viewportWidth="400"
+    android:viewportHeight="600">
+    <!-- Main Tunisia Map Outline -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="3"
+        android:strokeLineJoin="round"
+        android:pathData="M175,60
+        L190,55 L205,58 L225,70 L240,95 L245,130
+        C240,145 230,155 220,160
+        L225,190 L240,230 L260,280 L275,330 L280,380 L275,420 L255,470 L225,530 L195,585 L175,600
+        L155,585 L125,530 L95,470 L75,420 L70,370 L65,320 L70,270 L60,220 L50,170 L55,130 L75,100 L105,80 L140,70 L160,65 Z" />
+
+    <!-- Djerba Island -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="2"
+        android:pathData="M275,385 C285,380 295,390 285,405 C275,410 265,400 275,385 Z" />
+
+    <!-- Kerkennah Islands -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="2"
+        android:pathData="M260,290 L270,285 L275,295 L265,300 Z" />
+</vector>
