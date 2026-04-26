@@ -21,42 +21,41 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ScanActivity extends AppCompatActivity {
 
     private static final int CAMERA_PERMISSION_CODE = 101;
     private static final int CAMERA_REQUEST_CODE = 102;
-    // Option A: For Emulator testing (points to your PC's localhost)
-    // private static final String API_URL = "http://10.0.2.2:8000/health";
-
-    // Option B: For Physical Device (Replace with your PC's actual IP)
-    // private static final String API_URL = "http://192.168.1.5:8000/health";
-
-    // Option C: Public Test URL (Use this to test if the app's logic works)
-    private static final String API_URL = "https://httpbin.org/post";
-    private String currentScanType = "";
+    private static final String API_URL = "https://smog-blighted-jailer.ngrok-free.dev/score-json?fbclid=IwY2xjawRaY-xleHRuA2FlbQIxMABicmlkETFER09sbTMxQWM4YmR4WFE3c3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHtecwENYeTBqK7W_B6Vb4161oRIM3wSSBn0nyIuBl_XR9t_RzAHWjg7dHPwQ_aem_zb8E2FfddQ6eU_L0GYUWwg";
     
-    // Variables to store Base64 strings
+    private String currentScanType = "";
     private String base64Water = "";
     private String base64Plant = "";
     private String base64Soil = "";
-    
     private double latitude = 0.0;
     private double longitude = 0.0;
     
     private MaterialButton btnSubmit;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
 
-        // Get location from intent
+        mDatabase = FirebaseDatabase.getInstance("https://agrifarm-b8894-default-rtdb.firebaseio.com/").getReference();
+
         latitude = getIntent().getDoubleExtra("latitude", 0.0);
         longitude = getIntent().getDoubleExtra("longitude", 0.0);
 
@@ -66,21 +65,11 @@ public class ScanActivity extends AppCompatActivity {
         MaterialButton btnBack = findViewById(R.id.btnBack);
         btnSubmit = findViewById(R.id.btnSubmit);
 
-        btnScanWater.setOnClickListener(v -> {
-            currentScanType = "Water";
-            checkPermissionAndOpneCamera();
-        });
-        btnScanPlant.setOnClickListener(v -> {
-            currentScanType = "Plant";
-            checkPermissionAndOpneCamera();
-        });
-        btnScanSoil.setOnClickListener(v -> {
-            currentScanType = "Soil";
-            checkPermissionAndOpneCamera();
-        });
+        btnScanWater.setOnClickListener(v -> { currentScanType = "Water"; checkPermissionAndOpneCamera(); });
+        btnScanPlant.setOnClickListener(v -> { currentScanType = "Plant"; checkPermissionAndOpneCamera(); });
+        btnScanSoil.setOnClickListener(v -> { currentScanType = "Soil"; checkPermissionAndOpneCamera(); });
 
         btnBack.setOnClickListener(v -> finish());
-        
         btnSubmit.setOnClickListener(v -> sendAnalysisRequest());
     }
 
@@ -98,79 +87,101 @@ public class ScanActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == CAMERA_PERMISSION_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openCamera();
-            } else {
-                Toast.makeText(this, "Camera Permission is Required to Scan", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             Bitmap image = (Bitmap) data.getExtras().get("data");
             if (image != null) {
                 String base64Image = encodeImage(image);
-                
-                switch (currentScanType) {
-                    case "Water":
-                        base64Water = base64Image;
-                        break;
-                    case "Plant":
-                        base64Plant = base64Image;
-                        break;
-                    case "Soil":
-                        base64Soil = base64Image;
-                        break;
-                }
+                if (currentScanType.equals("Water")) base64Water = base64Image;
+                else if (currentScanType.equals("Plant")) base64Plant = base64Image;
+                else if (currentScanType.equals("Soil")) base64Soil = base64Image;
                 
                 Toast.makeText(this, currentScanType + " Scan Saved", Toast.LENGTH_SHORT).show();
-                checkIfAllScansDone();
+                if (!base64Water.isEmpty() && !base64Plant.isEmpty() && !base64Soil.isEmpty()) {
+                    btnSubmit.setVisibility(View.VISIBLE);
+                }
             }
-        }
-    }
-
-    private void checkIfAllScansDone() {
-        if (!base64Water.isEmpty() && !base64Plant.isEmpty() && !base64Soil.isEmpty()) {
-            btnSubmit.setVisibility(View.VISIBLE);
         }
     }
 
     private String encodeImage(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
-        byte[] byteArray = byteArrayOutputStream.toByteArray();
-        return Base64.encodeToString(byteArray, Base64.NO_WRAP);
+        return Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.NO_WRAP);
     }
 
     private void sendAnalysisRequest() {
         JSONObject jsonBody = new JSONObject();
         try {
-            jsonBody.put("plant_image_url", base64Plant);
-            jsonBody.put("soil_image_url", base64Soil);
-            jsonBody.put("water_image_url", base64Water);
+            jsonBody.put("plant_image_b64", base64Plant);
+            jsonBody.put("soil_image_b64", base64Soil);
+            jsonBody.put("water_image_b64", base64Water);
             jsonBody.put("latitude", latitude);
             jsonBody.put("longitude", longitude);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        } catch (JSONException e) { e.printStackTrace(); }
 
         RequestQueue queue = Volley.newRequestQueue(this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, API_URL, jsonBody,
                 response -> {
-                    Log.d("API_RESPONSE", response.toString());
-                    Toast.makeText(ScanActivity.this, "Analysis Sent Successfully!", Toast.LENGTH_LONG).show();
+                    saveToFirebaseAndNavigate(response);
                 },
-                error -> {
-                    Log.e("API_ERROR", error.toString());
-                    Toast.makeText(ScanActivity.this, "Failed to send analysis. Check connection.", Toast.LENGTH_LONG).show();
-                });
+                error -> Toast.makeText(ScanActivity.this, "API Error", Toast.LENGTH_SHORT).show());
 
         queue.add(jsonObjectRequest);
+    }
+
+    private void saveToFirebaseAndNavigate(JSONObject response) {
+        try {
+            String id = mDatabase.child("analyses").push().getKey();
+            if (id == null) return;
+
+            Map<String, Object> dataMap = new HashMap<>();
+            dataMap.put("risk_score", response.getDouble("risk_score"));
+            dataMap.put("risk_band", response.getString("risk_band"));
+            dataMap.put("disclaimer", response.getString("disclaimer"));
+            dataMap.put("latitude", latitude);
+            dataMap.put("longitude", longitude);
+            dataMap.put("timestamp", System.currentTimeMillis());
+
+            JSONObject subScores = response.getJSONObject("sub_scores");
+            Map<String, Double> subScoresMap = new HashMap<>();
+            subScoresMap.put("plant", subScores.getDouble("plant"));
+            subScoresMap.put("soil", subScores.getDouble("soil"));
+            subScoresMap.put("water", subScores.getDouble("water"));
+            subScoresMap.put("geo", subScores.getDouble("geo"));
+            dataMap.put("sub_scores", subScoresMap);
+
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (currentUser != null) {
+                dataMap.put("userId", currentUser.getUid());
+            }
+
+            // Save to Firebase
+            mDatabase.child("analyses").child(id).setValue(dataMap)
+                .addOnSuccessListener(aVoid -> Log.d("Firebase", "Data saved successfully"))
+                .addOnFailureListener(e -> {
+                    Log.e("Firebase", "Failed to save data: " + e.getMessage());
+                    Toast.makeText(ScanActivity.this, "Firebase Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+
+            // Navigate to ScoreActivity
+            Intent intent = new Intent(ScanActivity.this, ScoreActivity.class);
+            intent.putExtra("risk_score", response.getDouble("risk_score"));
+            intent.putExtra("risk_band", response.getString("risk_band"));
+            
+            intent.putExtra("plant", subScores.getDouble("plant"));
+            intent.putExtra("soil", subScores.getDouble("soil"));
+            intent.putExtra("water", subScores.getDouble("water"));
+            intent.putExtra("geo", subScores.getDouble("geo"));
+            intent.putExtra("disclaimer", response.getString("disclaimer"));
+            
+            startActivity(intent);
+            finish();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Data Parsing Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 }

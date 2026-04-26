@@ -42,6 +42,10 @@
             android:exported="false"
             android:theme="@style/Theme.Agrifarm" />
         <activity
+            android:name=".ScoreActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Agrifarm" />
+        <activity
             android:name=".SignupActivity"
             android:exported="false"
             android:theme="@style/Theme.Agrifarm" />
