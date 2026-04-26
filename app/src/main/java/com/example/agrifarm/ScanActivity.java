@@ -165,17 +165,9 @@ public class ScanActivity extends AppCompatActivity {
                     Toast.makeText(ScanActivity.this, "Firebase Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
 
-            // Navigate to ScoreActivity
-            Intent intent = new Intent(ScanActivity.this, ScoreActivity.class);
-            intent.putExtra("risk_score", response.getDouble("risk_score"));
-            intent.putExtra("risk_band", response.getString("risk_band"));
-            
-            intent.putExtra("plant", subScores.getDouble("plant"));
-            intent.putExtra("soil", subScores.getDouble("soil"));
-            intent.putExtra("water", subScores.getDouble("water"));
-            intent.putExtra("geo", subScores.getDouble("geo"));
-            intent.putExtra("disclaimer", response.getString("disclaimer"));
-            
+            // Navigate to BlockchainResultActivity
+            Intent intent = new Intent(ScanActivity.this, BlockchainResultActivity.class);
+            intent.putExtra("analysis_json", response.toString());
             startActivity(intent);
             finish();
 

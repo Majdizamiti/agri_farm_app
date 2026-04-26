@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="24dp">
+
+        <ImageView
+            android:id="@+id/ivLogo"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="24dp"
+            android:contentDescription="App Logo"
+            android:src="@drawable/splachimg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Blockchain Verification"
+            android:textColor="@color/primary_green"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivLogo" />
+
+        <View
+            android:id="@+id/titleUnderline"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/primary_green"
+            app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+        <TextView
+            android:id="@+id/tvStatusLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Verification Status"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/titleUnderline" />
+
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edittext_background"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp"
+            android:text="Processing..."
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/tvStatusLabel" />
+
+        <TextView
+            android:id="@+id/tvBatchIdLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Batch ID"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvStatus" />
+
+        <TextView
+            android:id="@+id/tvBatchId"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edittext_background"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp"
+            android:text="-"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/tvBatchIdLabel" />
+
+        <TextView
+            android:id="@+id/tvTxHashLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Transaction Hash"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvBatchId" />
+
+        <TextView
+            android:id="@+id/tvTxHash"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="56dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edittext_background"
+            android:gravity="center_vertical"
+            android:padding="16dp"
+            android:text="-"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:layout_constraintTop_toBottomOf="@id/tvTxHashLabel" />
+
+        <TextView
+            android:id="@+id/tvQualityScoreLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="AI Quality Score"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvTxHash" />
+
+        <TextView
+            android:id="@+id/tvQualityScore"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edittext_background"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp"
+            android:text="-"
+            android:textColor="@color/primary_green"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@id/tvQualityScoreLabel" />
+
+        <Button
+            android:id="@+id/btnViewScore"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="@color/primary_green"
+            android:text="View Detailed Analysis"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            app:cornerRadius="8dp"
+            app:layout_constraintTop_toBottomOf="@id/tvQualityScore" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnHome"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="24dp"
+            android:text="Back to Home"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            app:cornerRadius="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnViewScore"
+            app:strokeColor="@color/border_gray" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

@@ -53,6 +53,15 @@
             android:name=".LoginActivity"
             android:exported="false"
             android:theme="@style/Theme.Agrifarm" />
+        <activity
+            android:name=".BlockchainResultActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Agrifarm">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
