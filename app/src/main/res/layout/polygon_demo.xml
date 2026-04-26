@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2">
+
+            <TextView android:text="Fill Hue" />
+            <SeekBar
+                android:id="@+id/fillHueSeekBar"
+                android:layout_width="match_parent" />
+
+            <TextView android:text="Fill Alpha" />
+            <SeekBar
+                android:id="@+id/fillAlphaSeekBar"
+                android:layout_width="match_parent" />
+
+            <TextView android:text="Stroke Width" />
+            <SeekBar
+                android:id="@+id/strokeWidthSeekBar"
+                android:layout_width="match_parent" />
+
+            <TextView android:text="Stroke Hue" />
+            <SeekBar
+                android:id="@+id/strokeHueSeekBar"
+                android:layout_width="match_parent" />
+
+            <TextView android:text="Stroke Alpha" />
+            <SeekBar
+                android:id="@+id/strokeAlphaSeekBar"
+                android:layout_width="match_parent" />
+
+            <TextView android:text="Joint Type" />
+            <Spinner android:id="@+id/strokeJointTypeSpinner" />
+
+            <TextView android:text="Pattern" />
+            <Spinner android:id="@+id/strokePatternSpinner" />
+
+            <CheckBox
+                android:id="@+id/toggleClickability"
+                android:layout_columnSpan="2"
+                android:onClick="toggleClickability"
+                android:text="Clickable" />
+        </GridLayout>
+    </ScrollView>
+</LinearLayout>

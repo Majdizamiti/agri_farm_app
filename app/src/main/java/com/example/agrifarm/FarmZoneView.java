@@ -36,6 +36,8 @@ public class FarmZoneView extends View {
         init();
     }
 
+    private Paint highlightPaint;
+
     private void init() {
         pointPaint = new Paint();
         pointPaint.setColor(Color.parseColor("#E91E63")); // Pinkish red
@@ -55,7 +57,15 @@ public class FarmZoneView extends View {
         fillPaint.setColor(Color.argb(80, 63, 81, 181)); // Semi-transparent Indigo
         fillPaint.setStyle(Paint.Style.FILL);
         fillPaint.setAntiAlias(true);
+
+        highlightPaint = new Paint();
+        highlightPaint.setColor(Color.YELLOW);
+        highlightPaint.setStrokeWidth(20f);
+        highlightPaint.setStyle(Paint.Style.FILL);
+        highlightPaint.setAntiAlias(true);
     }
+
+    private boolean isClosed = false;
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -67,16 +77,20 @@ public class FarmZoneView extends View {
             for (int i = 1; i < points.size(); i++) {
                 zonePath.lineTo(points.get(i).x, points.get(i).y);
             }
-            
-            if (points.size() > 2) {
+
+            if (isClosed) {
                 zonePath.close();
                 canvas.drawPath(zonePath, fillPaint);
             }
-            
+
             canvas.drawPath(zonePath, linePaint);
 
             for (int i = 0; i < points.size(); i++) {
                 PointF point = points.get(i);
+                if (i == 0 && !isClosed && points.size() >= 3) {
+                    // Highlight first point when it can be closed
+                    canvas.drawCircle(point.x, point.y, 18, highlightPaint);
+                }
                 canvas.drawCircle(point.x, point.y, i == selectedPointIndex ? 20 : 12, pointPaint);
             }
         }
@@ -89,10 +103,21 @@ public class FarmZoneView extends View {
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                selectedPointIndex = findNearestPoint(x, y);
-                if (selectedPointIndex == -1) {
-                    points.add(new PointF(x, y));
-                    selectedPointIndex = points.size() - 1;
+                if (isClosed) {
+                    // Optional: allow moving points even when closed, or prevent adding new ones
+                    selectedPointIndex = findNearestPoint(x, y);
+                } else {
+                    int nearest = findNearestPoint(x, y);
+                    if (nearest == 0 && points.size() >= 3) {
+                        // Close the polygon if clicking the first point
+                        isClosed = true;
+                        selectedPointIndex = -1;
+                    } else if (nearest == -1) {
+                        points.add(new PointF(x, y));
+                        selectedPointIndex = points.size() - 1;
+                    } else {
+                        selectedPointIndex = nearest;
+                    }
                 }
                 invalidate();
                 return true;
@@ -129,8 +154,16 @@ public class FarmZoneView extends View {
         return -1;
     }
 
+    public void addPoint(float x, float y) {
+        if (!isClosed) {
+            points.add(new PointF(x, y));
+            invalidate();
+        }
+    }
+
     public void clearPoints() {
         points.clear();
+        isClosed = false;
         invalidate();
     }
 

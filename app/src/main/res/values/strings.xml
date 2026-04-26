@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">Agrifarm</string>
     <string name="default_web_client_id">660837165922-ot4mc9f8203qoe910trkbbo8n6782l3d.apps.googleusercontent.com</string>
+    <string name="polygon_demo_description">Polygon Demo</string>
+    <string name="joint_type_default">Default</string>
+    <string name="joint_type_bevel">Bevel</string>
+    <string name="joint_type_round">Round</string>
+    <string name="pattern_solid">Solid</string>
+    <string name="pattern_dashed">Dashed</string>
+    <string name="pattern_dotted">Dotted</string>
+    <string name="pattern_mixed">Mixed</string>
 </resources>
