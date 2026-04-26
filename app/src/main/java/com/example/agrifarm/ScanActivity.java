@@ -31,7 +31,14 @@ public class ScanActivity extends AppCompatActivity {
 
     private static final int CAMERA_PERMISSION_CODE = 101;
     private static final int CAMERA_REQUEST_CODE = 102;
-    private static final String API_URL = "http://10.0.2.2:8000/health";
+    // Option A: For Emulator testing (points to your PC's localhost)
+    // private static final String API_URL = "http://10.0.2.2:8000/health";
+
+    // Option B: For Physical Device (Replace with your PC's actual IP)
+    // private static final String API_URL = "http://192.168.1.5:8000/health";
+
+    // Option C: Public Test URL (Use this to test if the app's logic works)
+    private static final String API_URL = "https://httpbin.org/post";
     private String currentScanType = "";
     
     // Variables to store Base64 strings
